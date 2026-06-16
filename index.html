@@ -11,6 +11,27 @@
     <!-- Google Fonts: Noto Sans KR -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
+    <!-- 이미지 로드 관련 함수들을 head로 이동하여 정의되지 않은 오류(ReferenceError)를 방지합니다. -->
+    <script>
+        function handleLogoLoad() {
+            const img = document.getElementById("church-logo-img");
+            const fallback = document.getElementById("church-logo-fallback");
+            if (img && fallback) {
+                img.classList.remove("hidden");
+                fallback.classList.add("hidden");
+            }
+        }
+
+        function handleLogoError() {
+            const img = document.getElementById("church-logo-img");
+            const fallback = document.getElementById("church-logo-fallback");
+            if (img && fallback) {
+                img.classList.add("hidden");
+                fallback.classList.remove("hidden");
+            }
+        }
+    </script>
+
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -206,12 +227,12 @@
         <div class="glass-panel rounded-2xl py-3 px-4 flex flex-row items-center justify-between gap-3 shadow-sm">
             <!-- Brand Logo / Title -->
             <div class="flex items-center gap-3">
-                <!-- Integrated Church Logo Container -->
+                <!-- Integrated Church Logo Container (구조 수정 부분) -->
                 <div class="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-white/60 bg-white/40 flex items-center justify-center shadow-sm shrink-0">
-                    <!-- 수정된 깃허브 이미지 경로 (epchyouthlogo.jpg) -->
-                    <img id="church-logo-img" src="epchyouthlogo.jpg" alt="은평교회 로고" class="w-full h-full object-cover hidden" onload="this.classList.remove('hidden')">
-                    <!-- Default Cross Fallback Icon (if local image fails to load) -->
-                    <span id="church-logo-fallback" class="text-indigo-600 text-lg font-black">✝</span>
+                    <!-- 기본 십자가 백그라운드 아이콘 (기본 탑재, 이미지가 나타나면 스크립트로 차단됨) -->
+                    <span id="church-logo-fallback" class="text-indigo-600 text-lg font-black absolute inset-0 flex items-center justify-center">✝</span>
+                    <!-- 로고 이미지 (성공 로드 시 handleLogoLoad 실행하여 십자가를 안전하게 가림) -->
+                    <img id="church-logo-img" src="epchyouthlogo.jpg" alt="은평교회 로고" class="absolute inset-0 w-full h-full object-cover hidden" onload="handleLogoLoad()" onerror="handleLogoError()">
                 </div>
                 <div>
                     <h1 class="text-[15px] sm:text-lg md:text-xl font-extrabold tracking-tight bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent leading-snug">
@@ -357,383 +378,4 @@
     <!-- Footer -->
     <footer class="w-full max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-5 text-center text-slate-500 text-[10px] border-t border-white/20 mt-4 flex flex-col md:flex-row items-center justify-between gap-2">
         <div class="order-2 md:order-1">
-            © 2026 <strong>은평교회 젊은이예배 2026 웰컴팀</strong>. 
-        </div>
-        <!-- 가독성과 흐름이 완성도 높게 향상된 자연스러운 슬로건 텍스트 영역 -->
-        <div class="text-slate-600 font-medium text-[11px] sm:text-xs md:text-sm tracking-wide leading-relaxed order-1 md:order-2">
-            하나님을 더 <span class="text-emphasis-highlight">알</span>아가고 더 <span class="text-emphasis-highlight">사</span>랑하고 더 <span class="text-emphasis-highlight">따</span>라가는 하나님나라 THE 공동체
-        </div>
-    </footer>
-
-    <!-- Core Business logic and interaction rules -->
-    <script>
-        // 5 Main Categories
-        const sharingData = [
-            {
-                id: 1,
-                title: "자기소개 & 성격 이야기",
-                badge: "★ 필수 나눔",
-                badgeClass: "bg-pink-100 text-pink-600 border border-pink-200/50",
-                gradientIcon: "from-pink-400 to-rose-400",
-                icon: "fa-solid fa-face-smile-beam",
-                questions: [
-                    {
-                        qid: "Q1",
-                        text: "나를 ‘음식’으로 표현한다면 어떤 음식에 가장 가까운가요? (예: 겉바속촉 까눌레, 평양냉면처럼 슴슴한 매력 등)"
-                    },
-                    {
-                        qid: "Q2",
-                        text: "사람들이 잘 모르는 나의 모습은 무엇인가요?"
-                    },
-                    {
-                        qid: "Q3",
-                        text: "처음 만난 사람들이 보는 나의 첫인상과, 친해진 뒤 사람들이 말하는 나의 실제 모습은 어떤 차이가 있나요?"
-                    },
-                    {
-                        qid: "Q4",
-                        text: "만났을 때 가장 나다울 수 있는 사람은 누구인가요?"
-                    }
-                ]
-            },
-            {
-                id: 2,
-                title: "신앙 & 하나님과의 관계",
-                badge: "★ 필수 나눔",
-                badgeClass: "bg-blue-100 text-blue-600 border border-blue-200/50",
-                gradientIcon: "from-sky-400 to-indigo-400",
-                icon: "fa-solid fa-cross",
-                questions: [
-                    {
-                        qid: "Q1",
-                        text: "요즘 나의 신앙 상태나 마음을 날씨나 한 단어로 표현한다면 무엇인가요? (예: 맑음, 흐린 뒤 갬, 정체기 등)"
-                    },
-                    {
-                        qid: "Q2",
-                        text: "평소에 가장 좋아하거나 힘들 때 위로가 되었던 찬양 가사나 성경 구절이 있다면 소개해 주세요."
-                    },
-                    {
-                        qid: "Q3",
-                        text: "만약 지금 하나님께 딱 한 가지만 질문하고 즉시 답변을 들을 수 있는 기회가 생긴다면, 어떤 것을 가장 묻고 싶으신가요?"
-                    },
-                    {
-                        qid: "Q4",
-                        text: "삶 속에서 '하나님이 정말 계시는구나'라고 느끼게 되었던 첫 순간이나, 최근에 경험한 소소한 감사의 제목이 있다면 나눠주세요."
-                    }
-                ]
-            },
-            {
-                id: 3,
-                title: "일상 & 현실 고민",
-                badge: "자유 선택",
-                badgeClass: "bg-purple-100 text-purple-600 border border-purple-200/50",
-                gradientIcon: "from-purple-400 to-indigo-400",
-                icon: "fa-solid fa-mug-hot",
-                questions: [
-                    {
-                        qid: "Q1",
-                        text: "학업이나 업무로 스트레스를 잔뜩 받은 날, 나만의 확실한 스트레스 해소법이나 힐링 루틴이 있다면 공유해 주세요."
-                    },
-                    {
-                        qid: "Q2",
-                        text: "최근 나를 가장 크게 웃게 만들었거나 소소하게 행복을 주었던 일은 무엇인가요?"
-                    },
-                    {
-                        qid: "Q3",
-                        text: "만약 다음 주에 딱 일주일간의 완벽한 자유 휴가가 주어진다면 가장 하고 싶은 일은 무엇인가요?"
-                    },
-                    {
-                        qid: "Q4",
-                        text: "최근 내 삶에서 소소하지만 확실한 삶의 질을 높여준 ‘꿀템(아이템)’이나 ‘습관’이 있다면 조원들에게 영업(추천)해 주세요!"
-                    }
-                ]
-            },
-            {
-                id: 4,
-                title: "연애 & 결혼 가치관",
-                badge: "자유 선택",
-                badgeClass: "bg-orange-100 text-orange-600 border border-orange-200/50",
-                gradientIcon: "from-orange-400 to-pink-400",
-                icon: "fa-solid fa-heart-circle-check",
-                questions: [
-                    {
-                        qid: "Q1",
-                        text: "내가 생각하는 연애의 이상형 중에서 '이 조건만큼은 나랑 꼭 맞았으면 좋겠다' 하는 현실적인 부분이 있다면 무엇인가요? (신앙 제외!)"
-                    },
-                    {
-                        qid: "Q2",
-                        text: "사랑의 5가지 언어(인정하는 말, 함께하는 시간, 선물, 봉사, 스킨십) 중에서 나를 가장 행복하게 만드는 언어는 무엇인가요?"
-                    },
-                    {
-                        qid: "Q3",
-                        text: "나중에 먼 미래에 가정을 이루고 자녀가 생긴다면, 어떤 부모가 되고 싶은지 마음속으로 꿈꾸는 모습이 있나요?"
-                    },
-                    {
-                        qid: "Q4",
-                        text: "연인과 갈등이 생겼을 때, 내가 선호하는 해결 스타일은? [바로 그 자리에서 대화로 풀기] VS [생각을 정리할 혼자만의 서늘한 시간 가지기]"
-                    }
-                ]
-            },
-            {
-                id: 5,
-                title: "꿈 & 인생 방향성",
-                badge: "자유 선택",
-                badgeClass: "bg-emerald-100 text-emerald-600 border border-emerald-200/50",
-                gradientIcon: "from-emerald-400 to-teal-400",
-                icon: "fa-solid fa-compass",
-                questions: [
-                    {
-                        qid: "Q1",
-                        text: "올해 2026년도 벌써 반이 지나가고 있네요! 남은 하반기 동안 꼭 이루고 싶거나 도전해보고 싶은 버킷리스트가 있다면 무엇인가요?"
-                    },
-                    {
-                        qid: "Q2",
-                        text: "누군가가 훗날 나에 대한 책을 쓴다면, 그 책의 제목이 무엇이었으면 좋겠나요? (어떤 사람으로 기억되고 싶은지)"
-                    },
-                    {
-                        qid: "Q3",
-                        text: "지금 내가 살아가는 삶에서 가장 중요하게 붙잡고 있는 비전이나 가치관, 혹은 인생의 최종 목표는 무엇인가요?"
-                    },
-                    {
-                        qid: "Q4",
-                        text: "만약 5년 뒤의 내가 지금의 나에게 딱 한 줄짜리 타임머신 편지를 보낼 수 있다면, 거기에 어떤 문장이 적혀 있으면 가장 안심이 될까요?"
-                    }
-                ]
-            }
-        ];
-
-        let currentCategoryIndex = 0;
-        let isRouletteRunning = false;
-
-        window.onload = function() {
-            // Load Church default custom fallback or load original
-            const logoEl = document.getElementById("church-logo-img");
-            logoEl.onerror = function() {
-                logoEl.classList.add("hidden");
-                document.getElementById("church-logo-fallback").classList.remove("hidden");
-            };
-            
-            renderActiveCategory();
-        };
-
-        // Render current active layout
-        function renderActiveCategory() {
-            const currentCat = sharingData[currentCategoryIndex];
-            
-            // Step 1: Active Nav Tabs Selection highlight styling (Mobile Responsive sizing)
-            document.querySelectorAll(".tab-btn").forEach((btn, index) => {
-                if(index === currentCategoryIndex) {
-                    btn.className = "tab-btn shrink-0 md:flex-1 min-w-[110px] sm:min-w-[120px] text-center py-2 px-2.5 rounded-lg text-xs md:text-sm font-black transition-all duration-300 flex items-center justify-center gap-1.5 bg-white text-indigo-700 shadow-sm border border-indigo-100/40";
-                    // 탭 포커스 자동 세로 중앙 스크롤 이동 지원
-                    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                } else {
-                    btn.className = "tab-btn shrink-0 md:flex-1 min-w-[110px] sm:min-w-[120px] text-center py-2 px-2.5 rounded-lg text-xs md:text-sm font-bold transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-600 hover:bg-white/40 hover:text-indigo-600";
-                }
-            });
-
-            // Step 2: Set category-level dynamics with nice soft screen transition
-            const container = document.getElementById("category-page-container");
-            container.classList.remove("fade-in-slide");
-            void container.offsetWidth; // force redraw/reflow
-            container.classList.add("fade-in-slide");
-
-            document.getElementById("cat-title").innerText = currentCat.title;
-            
-            const badge = document.getElementById("cat-badge");
-            badge.innerText = currentCat.badge;
-            badge.className = `px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm ${currentCat.badgeClass}`;
-
-            document.getElementById("cat-step-indicator").innerText = `전체 중 ${currentCat.id}단계 카테고리`;
-
-            const iconContainer = document.getElementById("cat-icon-container");
-            iconContainer.className = `w-11 h-11 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-lg sm:text-2xl shadow-inner text-white bg-gradient-to-tr ${currentCat.gradientIcon} shadow-md shrink-0`;
-            iconContainer.innerHTML = `<i class="${currentCat.icon}"></i>`;
-
-            // Step 3: Render 4 Simple static clean question cards
-            const grid = document.getElementById("questions-grid");
-            grid.innerHTML = "";
-
-            currentCat.questions.forEach((q, qIndex) => {
-                const qCard = document.createElement("div");
-                qCard.id = `q-card-${qIndex}`;
-                qCard.className = "glass-card rounded-2xl p-4 sm:p-5 md:p-6 flex flex-col justify-between min-h-0 sm:min-h-[140px] border border-white/40 shadow-sm transition-all duration-500";
-
-                qCard.innerHTML = `
-                    <div>
-                        <span class="text-[10px] sm:text-xs font-extrabold text-indigo-400 mb-1 sm:mb-2 block uppercase tracking-wide">${q.qid}</span>
-                        <p class="text-[13px] sm:text-[15px] md:text-base font-bold text-slate-800 leading-relaxed">${q.text}</p>
-                    </div>
-                `;
-                grid.appendChild(qCard);
-            });
-        }
-
-        function changeCategory(index) {
-            if (isRouletteRunning) return;
-            currentCategoryIndex = index;
-            renderActiveCategory();
-        }
-
-        function nextCategory() {
-            if (isRouletteRunning) return;
-            if(currentCategoryIndex < sharingData.length - 1) {
-                currentCategoryIndex++;
-                renderActiveCategory();
-            } else {
-                currentCategoryIndex = 0;
-                renderActiveCategory();
-            }
-        }
-
-        function prevCategory() {
-            if (isRouletteRunning) return;
-            if(currentCategoryIndex > 0) {
-                currentCategoryIndex--;
-                renderActiveCategory();
-            } else {
-                currentCategoryIndex = sharingData.length - 1;
-                renderActiveCategory();
-            }
-        }
-
-        // 🎲 Roulette Raffle picking animation
-        function rollRandomQuestion() {
-            if (isRouletteRunning) return;
-            isRouletteRunning = true;
-
-            const totalQuestionsCount = 4;
-            let currentHighlightIndex = 0;
-            let speed = 70;
-            let stepCount = 0;
-            const totalSteps = 20 + Math.floor(Math.random() * 8);
-
-            // Clean previous spotlights
-            for(let i=0; i<totalQuestionsCount; i++) {
-                const card = document.getElementById(`q-card-${i}`);
-                if(card) {
-                    card.className = "glass-card rounded-2xl p-4 sm:p-5 md:p-6 flex flex-col justify-between min-h-0 sm:min-h-[140px] border border-white/40 shadow-sm transition-all duration-500";
-                }
-            }
-
-            // Highlighting cycle animation loop
-            function cycleHighlight() {
-                for(let i=0; i<totalQuestionsCount; i++) {
-                    const card = document.getElementById(`q-card-${i}`);
-                    if(card) card.classList.remove("roulette-active");
-                }
-
-                const targetCard = document.getElementById(`q-card-${currentHighlightIndex}`);
-                if (targetCard) targetCard.classList.add("roulette-active");
-
-                stepCount++;
-
-                if (stepCount < totalSteps) {
-                    if (stepCount > totalSteps * 0.8) {
-                        speed += 85; 
-                    } else if (stepCount > totalSteps * 0.5) {
-                        speed += 45;
-                    }
-                    currentHighlightIndex = (currentHighlightIndex + 1) % totalQuestionsCount;
-                    setTimeout(cycleHighlight, speed);
-                } else {
-                    const finalIndex = currentHighlightIndex;
-                    setTimeout(() => {
-                        const finalCard = document.getElementById(`q-card-${finalIndex}`);
-                        if(finalCard) {
-                            finalCard.classList.remove("roulette-active");
-                            finalCard.classList.add("spotlight-chosen");
-                            finalCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }
-                        isRouletteRunning = false;
-                        playWinnerBeep();
-                    }, 100);
-                }
-            }
-
-            cycleHighlight();
-        }
-
-        // Clean synthesized chimes feedback
-        function playWinnerBeep() {
-            try {
-                const context = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = context.createOscillator();
-                const gain = context.createGain();
-                osc.connect(gain);
-                gain.connect(context.destination);
-                osc.type = "sine";
-                osc.frequency.setValueAtTime(523.25, context.currentTime); 
-                gain.gain.setValueAtTime(0.4, context.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 1.0);
-                osc.start();
-                osc.stop(context.currentTime + 1.0);
-            } catch (e) {
-                console.log("Audio Context Blocked:", e);
-            }
-        }
-
-        // Modal Widget - Member selector controller 
-        function openSpinnerModal() {
-            document.getElementById("spinner-modal").classList.remove("hidden");
-        }
-        function closeSpinnerModal() {
-            document.getElementById("spinner-modal").classList.add("hidden");
-        }
-
-        function spinMemberSelector() {
-            const inputVal = document.getElementById("spinner-names-input").value;
-            const namesArray = inputVal.split(",").map(n => n.trim()).filter(n => n !== "");
-            const visualBox = document.getElementById("spinner-visual-box");
-
-            if(namesArray.length === 0) {
-                visualBox.innerHTML = "<span class='text-rose-500'>이름을 한 개 이상 적어주세요!</span>";
-                return;
-            }
-
-            let duration = 2400;
-            let speed = 60;
-            let elapsed = 0;
-            
-            visualBox.className = "text-base sm:text-xl font-black text-indigo-600 animate-pulse transition-all";
-
-            // Run shuffling animation of names list
-            function runShuffle() {
-                const randomIndex = Math.floor(Math.random() * namesArray.length);
-                const selectedName = namesArray[randomIndex];
-                visualBox.innerHTML = `🎲 <span class="bg-indigo-100/60 px-3 py-1 rounded-xl border border-indigo-200">${selectedName}</span>`;
-
-                elapsed += speed;
-                if(elapsed < duration) {
-                    if (elapsed > duration * 0.7) speed = 200;
-                    else if (elapsed > duration * 0.4) speed = 120;
-                    setTimeout(runShuffle, speed);
-                } else {
-                    visualBox.className = "text-lg sm:text-2xl font-black text-slate-800 transition-all";
-                    
-                    try {
-                        const context = new (window.AudioContext || window.webkitAudioContext)();
-                        const osc = context.createOscillator();
-                        const gain = context.createGain();
-                        osc.connect(gain);
-                        gain.connect(context.destination);
-                        osc.frequency.setValueAtTime(587.33, context.currentTime); 
-                        gain.gain.setValueAtTime(0.3, context.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.6);
-                        osc.start();
-                        osc.stop(context.currentTime + 0.6);
-                    } catch(err) {}
-
-                    visualBox.innerHTML = `
-                        <div class="flex flex-col items-center gap-1">
-                            <span class="text-[10px] font-bold text-slate-400">이번 차례 나눔 주인공!</span>
-                            <span class="text-2xl sm:text-3xl bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent font-black tracking-tight drop-shadow-sm">
-                                🎉 ${selectedName}
-                            </span>
-                        </div>
-                    `;
-                }
-            }
-            setTimeout(runShuffle, speed);
-        }
-    </script>
-</body>
-</html>
+            © 2026 <strong>은평교회 젊은이
