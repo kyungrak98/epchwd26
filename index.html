@@ -35,7 +35,7 @@
 
         .liquid-blob {
             position: absolute;
-            filter: blur(60px); /* 모바일 렌더링 성능을 위해 블러 강도를 80px에서 60px로 소폭 완화 */
+            filter: blur(60px); 
             opacity: 0.55;
             mix-blend-mode: multiply;
             animation: floatBubble 25s infinite alternate ease-in-out;
@@ -189,6 +189,37 @@
             color: #4f46e5;
             text-shadow: 0 0 1px rgba(79, 70, 229, 0.1);
         }
+
+        /* 📱 모바일 기기 고성능/발열 제어를 위한 미디어 쿼리 정의 [Inference] */
+        @media (max-width: 640px) {
+            /* 1. 이중 블러 연산 부하를 제어하기 위해 모바일 내 유리창 블러 값 대폭 축소 */
+            .glass-panel {
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                background: rgba(255, 255, 255, 0.65); /* 블러를 줄이는 대신 불투명도를 높여 디자인 균형 유지 [Inference] */
+            }
+            .glass-panel-heavy {
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                background: rgba(255, 255, 255, 0.82);
+            }
+            .glass-card {
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+                background: rgba(255, 255, 255, 0.55);
+            }
+
+            /* 2. 연산 영역 분할을 가속화하기 위해 모바일에서 배경 구체 개수를 4개 -> 2개로 물리적 격리 [Inference] */
+            .blob-purple, .blob-orange {
+                display: none !important;
+            }
+
+            /* 3. 남아있는 모바일 구체들의 블러 범위 완화 및 부드러운 하향 속도 조정 [Inference] */
+            .liquid-blob {
+                filter: blur(35px) !important;
+                animation-duration: 45s !important; /* 움직임을 정밀하게 제어해 프레임 레이트 안정화 [Inference] */
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen text-slate-800 flex flex-col justify-between antialiased">
@@ -334,7 +365,7 @@
             <div class="mb-4">
                 <label class="block text-[11px] sm:text-xs font-bold text-slate-600 mb-1">조원 이름 목록 (쉼표로 구분)</label>
                 <div class="flex gap-2">
-                    <input id="spinner-names-input" type="text" value="김요한, 이사랑, 박은혜, 최온유, 정희망" class="w-full px-3 py-2 text-xs sm:text-sm bg-white/50 border border-purple-200 rounded-xl focus:outline-none focus:border-purple-500 text-slate-800">
+                    <input id="spinner-names-input" type="text" value="손우성, 허남홍, 서동빈" class="w-full px-3 py-2 text-xs sm:text-sm bg-white/50 border border-purple-200 rounded-xl focus:outline-none focus:border-purple-500 text-slate-800">
                 </div>
             </div>
 
